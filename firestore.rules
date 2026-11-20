@@ -1,0 +1,489 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Primitive Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function userExists(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId));
+    }
+
+    function isValidTimestampCreate(data) {
+      return data.createdAt == request.time && data.updatedAt == request.time;
+    }
+
+    function isValidTimestampUpdate(data, prev) {
+      return data.createdAt == prev.createdAt && data.updatedAt == request.time;
+    }
+
+    // --- Entity Validation Blueprints ---
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'timezone', 'journeyStartDate', 'onboardingComplete',
+          'privacyAccepted', 'contentVersion', 'entitlementStatus',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'displayName', 'email', 'timezone', 'journeyStartDate',
+          'onboardingComplete', 'privacyAccepted', 'contentVersion',
+          'fontSizePreference', 'lastOpenedNight', 'entitlementStatus',
+          'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 120))
+        && (!('email' in data) || (data.email is string && data.email.size() <= 254))
+        && data.timezone is string && data.timezone.size() >= 1 && data.timezone.size() <= 64
+        && data.journeyStartDate is string && data.journeyStartDate.size() >= 1 && data.journeyStartDate.size() <= 32
+        && data.onboardingComplete is bool
+        && data.privacyAccepted is bool
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32
+        && (!('fontSizePreference' in data) || (data.fontSizePreference is string && data.fontSizePreference in ['normal', 'large']))
+        && (!('lastOpenedNight' in data) || (data.lastOpenedNight is int && data.lastOpenedNight >= 1 && data.lastOpenedNight <= 30))
+        && data.entitlementStatus is string && data.entitlementStatus == 'beta_free';
+    }
+
+    function isValidNightEntry(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'nightNumber', 'status', 'reflectionAnswers',
+          'smallActionNotes', 'smallActionChecks', 'personalDua',
+          'privateNote', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'nightNumber', 'status', 'reflectionAnswers',
+          'smallActionNotes', 'smallActionChecks', 'personalDua',
+          'privateNote', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.nightNumber is int && data.nightNumber >= 1 && data.nightNumber <= 30
+        && data.status is string && data.status in ['not_started', 'draft', 'completed']
+        && data.reflectionAnswers is list && data.reflectionAnswers.size() <= 10
+        && (data.reflectionAnswers.size() == 0 || (data.reflectionAnswers[0] is string && data.reflectionAnswers[0].size() <= 4000))
+        && (data.reflectionAnswers.size() <= 1 || (data.reflectionAnswers[1] is string && data.reflectionAnswers[1].size() <= 4000))
+        && (data.reflectionAnswers.size() <= 2 || (data.reflectionAnswers[2] is string && data.reflectionAnswers[2].size() <= 4000))
+        && data.smallActionNotes is string && data.smallActionNotes.size() <= 4000
+        && data.smallActionChecks is list && data.smallActionChecks.size() <= 15
+        && (data.smallActionChecks.size() == 0 || data.smallActionChecks[0] is bool)
+        && (data.smallActionChecks.size() <= 1 || data.smallActionChecks[1] is bool)
+        && (data.smallActionChecks.size() <= 2 || data.smallActionChecks[2] is bool)
+        && (data.smallActionChecks.size() <= 3 || data.smallActionChecks[3] is bool)
+        && (data.smallActionChecks.size() <= 4 || data.smallActionChecks[4] is bool)
+        && data.personalDua is string && data.personalDua.size() <= 5000
+        && data.privateNote is string && data.privateNote.size() <= 5000
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    function isValidDuaEntry(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'title', 'category', 'content', 'date',
+          'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'title', 'category', 'content', 'date',
+          'effortNote', 'reflectionNote', 'contentVersion',
+          'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 200
+        && data.category is string && data.category in [
+          'hubungan-dengan-allah',
+          'keluarga-dan-orang-tercinta',
+          'pekerjaan-rezeki-pendidikan',
+          'ampunan-dan-perbaikan-diri',
+          'kebaikan-untuk-orang-lain'
+        ]
+        && data.content is string && data.content.size() >= 1 && data.content.size() <= 6000
+        && data.date is string && data.date.size() >= 1 && data.date.size() <= 32
+        && (!('effortNote' in data) || (data.effortNote is string && data.effortNote.size() <= 3000))
+        && (!('reflectionNote' in data) || (data.reflectionNote is string && data.reflectionNote.size() <= 3000))
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    function isValidDuaLog(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'date', 'topic', 'duaText',
+          'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'date', 'topic', 'duaText', 'effortSteps',
+          'reflectionGratitude', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.date is string && data.date.size() >= 1 && data.date.size() <= 32
+        && data.topic is string && data.topic.size() >= 1 && data.topic.size() <= 200
+        && data.duaText is string && data.duaText.size() >= 1 && data.duaText.size() <= 6000
+        && (!('effortSteps' in data) || (data.effortSteps is string && data.effortSteps.size() <= 4000))
+        && (!('reflectionGratitude' in data) || (data.reflectionGratitude is string && data.reflectionGratitude.size() <= 4000))
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    function isValidTahajudLog(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'nightIndex', 'date', 'wakeStatus', 'activities',
+          'note', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'nightIndex', 'date', 'wakeStatus', 'activities',
+          'note', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.nightIndex is int && data.nightIndex >= 1 && data.nightIndex <= 30
+        && data.date is string && data.date.size() <= 32
+        && data.wakeStatus is string && data.wakeStatus in [
+          'terbangun', 'tidak_terbangun', 'belum_dicatat', 'tidak_ingin_mencatat'
+        ]
+        && data.activities is list && data.activities.size() <= 10
+        && (data.activities.size() == 0 || (data.activities[0] is string && data.activities[0].size() <= 64))
+        && (data.activities.size() <= 1 || (data.activities[1] is string && data.activities[1].size() <= 64))
+        && data.note is string && data.note.size() <= 2000
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    function isValidChecklistState(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'checkedIds', 'personalNote',
+          'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'checkedIds', 'personalNote',
+          'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.checkedIds is list && data.checkedIds.size() <= 20
+        && (data.checkedIds.size() == 0 || (data.checkedIds[0] is string && data.checkedIds[0].size() <= 64))
+        && (data.checkedIds.size() <= 1 || (data.checkedIds[1] is string && data.checkedIds[1].size() <= 64))
+        && data.personalNote is string && data.personalNote.size() <= 3000
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    function isValidGratitudeEntry(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'date', 'item1', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'date', 'item1', 'item2', 'item3', 'goodDeedPlan',
+          'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.date is string && data.date.size() >= 1 && data.date.size() <= 32
+        && data.item1 is string && data.item1.size() >= 1 && data.item1.size() <= 1000
+        && (!('item2' in data) || (data.item2 is string && data.item2.size() <= 1000))
+        && (!('item3' in data) || (data.item3 is string && data.item3.size() <= 1000))
+        && (!('goodDeedPlan' in data) || (data.goodDeedPlan is string && data.goodDeedPlan.size() <= 2000))
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    function isValidWeeklyMuhasabah(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'weekLabel', 'date', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'weekLabel', 'date', 'gratitudeThisWeek', 'habitsToKeep',
+          'areasToImprove', 'realisticSteps', 'personalDua',
+          'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.weekLabel is string && data.weekLabel.size() >= 1 && data.weekLabel.size() <= 120
+        && data.date is string && data.date.size() >= 1 && data.date.size() <= 32
+        && (!('gratitudeThisWeek' in data) || (data.gratitudeThisWeek is string && data.gratitudeThisWeek.size() <= 4000))
+        && (!('habitsToKeep' in data) || (data.habitsToKeep is string && data.habitsToKeep.size() <= 4000))
+        && (!('areasToImprove' in data) || (data.areasToImprove is string && data.areasToImprove.size() <= 4000))
+        && (!('realisticSteps' in data) || (data.realisticSteps is string && data.realisticSteps.size() <= 4000))
+        && (!('personalDua' in data) || (data.personalDua is string && data.personalDua.size() <= 4000))
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    function isValidRoutineItem(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'moment', 'habitName', 'sortOrder',
+          'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'moment', 'habitName', 'personalBenefit', 'realisticWay',
+          'frequency', 'sortOrder', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.moment is string && data.moment.size() >= 1 && data.moment.size() <= 120
+        && data.habitName is string && data.habitName.size() >= 1 && data.habitName.size() <= 200
+        && (!('personalBenefit' in data) || (data.personalBenefit is string && data.personalBenefit.size() <= 2000))
+        && (!('realisticWay' in data) || (data.realisticWay is string && data.realisticWay.size() <= 2000))
+        && (!('frequency' in data) || (data.frequency is string && data.frequency.size() <= 120))
+        && data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 1000
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    function isValidFinalReflection(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'entryType', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'entryType', 'relationshipBaseline', 'worshipHabitsBaseline',
+          'currentCondition', 'supportNeeded', 'journeyIntention',
+          'learnedLessons', 'habitsToMaintain', 'areasStillGrowing',
+          'letterToFutureSelf', 'contentVersion', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == userId && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.entryType is string && data.entryType in ['baseline', 'final_reflection']
+        && (!('relationshipBaseline' in data) || (data.relationshipBaseline is string && data.relationshipBaseline.size() <= 4000))
+        && (!('worshipHabitsBaseline' in data) || (data.worshipHabitsBaseline is string && data.worshipHabitsBaseline.size() <= 4000))
+        && (!('currentCondition' in data) || (data.currentCondition is string && data.currentCondition.size() <= 4000))
+        && (!('supportNeeded' in data) || (data.supportNeeded is string && data.supportNeeded.size() <= 4000))
+        && (!('journeyIntention' in data) || (data.journeyIntention is string && data.journeyIntention.size() <= 4000))
+        && (!('learnedLessons' in data) || (data.learnedLessons is string && data.learnedLessons.size() <= 5000))
+        && (!('habitsToMaintain' in data) || (data.habitsToMaintain is string && data.habitsToMaintain.size() <= 5000))
+        && (!('areasStillGrowing' in data) || (data.areasStillGrowing is string && data.areasStillGrowing.size() <= 5000))
+        && (!('letterToFutureSelf' in data) || (data.letterToFutureSelf is string && data.letterToFutureSelf.size() <= 10000))
+        && data.contentVersion is string && data.contentVersion.size() >= 1 && data.contentVersion.size() <= 32;
+    }
+
+    // --- User Profile & Private Subtree ---
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+      allow create: if isOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && isValidTimestampCreate(incoming());
+      allow update: if isOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && isValidTimestampUpdate(incoming(), existing())
+        && incoming().uid == existing().uid
+        && incoming().entitlementStatus == existing().entitlementStatus
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'displayName', 'journeyStartDate', 'onboardingComplete', 'privacyAccepted', 'updatedAt'
+          ])
+          || incoming().diff(existing()).affectedKeys().hasOnly([
+            'displayName', 'email', 'timezone', 'journeyStartDate', 'fontSizePreference', 'lastOpenedNight', 'updatedAt'
+          ])
+          || incoming().diff(existing()).affectedKeys().hasOnly([
+            'lastOpenedNight', 'updatedAt'
+          ])
+        );
+      allow delete: if isOwner(userId) && isValidId(userId);
+
+      match /nightEntries/{nightId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(nightId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(nightId)
+          && isValidNightEntry(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(nightId)
+          && isValidNightEntry(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().nightNumber == existing().nightNumber
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'status', 'reflectionAnswers', 'smallActionNotes', 'smallActionChecks',
+            'personalDua', 'privateNote', 'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(nightId);
+      }
+
+      match /duaEntries/{entryId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidDuaEntry(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidDuaEntry(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'title', 'category', 'content', 'date', 'effortNote', 'reflectionNote', 'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+      }
+
+      match /duaLogs/{entryId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidDuaLog(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidDuaLog(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'date', 'topic', 'duaText', 'effortSteps', 'reflectionGratitude', 'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+      }
+
+      match /tahajudLogs/{dateId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(dateId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(dateId)
+          && isValidTahajudLog(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(dateId)
+          && isValidTahajudLog(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().nightIndex == existing().nightIndex
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'date', 'wakeStatus', 'activities', 'note', 'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(dateId);
+      }
+
+      match /checklists/{checklistId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(checklistId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(checklistId)
+          && isValidChecklistState(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(checklistId)
+          && isValidChecklistState(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'checkedIds', 'personalNote', 'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(checklistId);
+      }
+
+      match /gratitudeEntries/{entryId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidGratitudeEntry(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidGratitudeEntry(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'date', 'item1', 'item2', 'item3', 'goodDeedPlan', 'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+      }
+
+      match /weeklyMuhasabah/{entryId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidWeeklyMuhasabah(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidWeeklyMuhasabah(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'weekLabel', 'date', 'gratitudeThisWeek', 'habitsToKeep',
+            'areasToImprove', 'realisticSteps', 'personalDua', 'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+      }
+
+      match /routineItems/{itemId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(itemId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(itemId)
+          && isValidRoutineItem(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(itemId)
+          && isValidRoutineItem(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'moment', 'habitName', 'personalBenefit', 'realisticWay',
+            'frequency', 'sortOrder', 'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(itemId);
+      }
+
+      match /finalReflections/{entryId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+        allow list: if isOwner(userId) && isValidId(userId) && existing().uid == request.auth.uid;
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidFinalReflection(incoming(), userId)
+          && isValidTimestampCreate(incoming())
+          && userExists(userId);
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidFinalReflection(incoming(), userId)
+          && isValidTimestampUpdate(incoming(), existing())
+          && incoming().uid == existing().uid
+          && incoming().entryType == existing().entryType
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'relationshipBaseline', 'worshipHabitsBaseline', 'currentCondition',
+            'supportNeeded', 'journeyIntention', 'learnedLessons',
+            'habitsToMaintain', 'areasStillGrowing', 'letterToFutureSelf',
+            'contentVersion', 'updatedAt'
+          ]);
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(entryId);
+      }
+    }
+  }
+}

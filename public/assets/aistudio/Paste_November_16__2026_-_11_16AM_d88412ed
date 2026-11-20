@@ -1,0 +1,546 @@
+RUANG PULANG — The Comeback Journal
+Tujuan: membangun web application journal spiritual interaktif yang benar-benar berfungsi, responsif, privat, dan siap diuji oleh calon pembeli. Ini bukan sekadar landing page, desain statis, atau prototype tombol tanpa fungsi.
+A. MASTER PROMPT — TEMPEL DI GOOGLE AI STUDIO BUILD MODE
+Salin seluruh instruksi di bawah ini ke Google AI Studio Build Mode. Sertakan file sumber Ruang_Pulang_Master_Manuskrip.md sebagai referensi konten proyek jika antarmuka mendukung lampiran. File DOCX master juga boleh disertakan sebagai pembanding. Naskah master adalah sumber konten utama.
+1. PERAN DAN TUJUAN PEMBANGUNAN
+Bertindaklah sebagai senior product designer, UX researcher, senior React/TypeScript engineer, Firebase architect, dan QA engineer yang membangun produk digital komersial bernama:
+
+RUANG PULANG — THE COMEBACK JOURNAL
+Tagline: 30 Malam untuk Kembali Mendekat kepada Allah.
+Brand descriptor: A Guided Spiritual Reflection Journal.
+
+Bangun aplikasi web full-stack yang memungkinkan seorang pengguna:
+1. Membuat akun dan masuk dengan aman.
+2. Menjalani perjalanan journal 30 malam dalam empat fase: REALIZE, RETURN, RECONNECT, dan REMAIN.
+3. Membaca materi refleksi dan edukasi yang telah disusun dalam naskah master.
+4. Menjawab pertanyaan refleksi dan menyimpan jawaban secara privat.
+5. Mencatat doa pribadi, rasa syukur, rutinitas ibadah, dan aktivitas ibadah malam.
+6. Melihat perkembangan pengisian journal tanpa memberi skor pada iman atau kualitas spiritual.
+7. Mengekspor catatan pribadi dan menghapus akun/data sesuai alur yang aman.
+8. Mengakses kembali semua catatan dari perangkat berbeda setelah login.
+Bangun aplikasi yang berfungsi end-to-end. Jangan berhenti pada proposal, wireframe, gambar dashboard, atau tampilan dengan tombol palsu. Setiap tombol, form, navigasi, filter, penyimpanan, pengeditan, dan penghapusan harus bekerja.
+
+Prioritas produk adalah pengalaman journaling yang tenang, personal, mudah digunakan, aman, dan konsisten dengan naskah master. Jangan menambahkan fitur AI untuk membaca, menilai, menafsirkan, atau membalas doa/jurnal pribadi pengguna.
+2. SUMBER KONTEN DAN ATURAN KETEPATAN AGAMA
+Gunakan file Ruang_Pulang_Master_Manuskrip.md sebagai sumber konten utama. Bila file DOCX Ruang_Pulang_Master_Manuskrip.docx juga tersedia, gunakan untuk memeriksa struktur dan isi. Jangan membuat ulang isi dari ingatan atau mengganti naskah dengan teks generik.
+Aturan sumber konten
+- Ekstrak dan susun konten master menjadi data terstruktur di folder, misalnya src/content/.
+- Buat journalContent.ts atau file JSON/TypeScript bertipe yang memuat empat fase, 30 malam, halaman pembuka, panduan tahajud, halaman pendukung, penutup, dan daftar referensi.
+- Pertahankan makna, susunan, dan redaksi naskah master. Perbaiki hanya kesalahan format yang jelas; jangan mengubah makna renungan atau materi agama.
+- Jangan meringkas atau menghilangkan bagian penting hanya agar lebih mudah dikodekan.
+- Jangan menambahkan ayat, hadis, kutipan Arab, doa ma'tsur, terjemahan, fatwa, atau klaim agama yang tidak ada di sumber.
+- Jangan mengarang URL sumber. Referensi yang belum memiliki URL harus ditampilkan sebagai teks rujukan, bukan tautan palsu.
+- Jangan mengubah parafrasa renungan menjadi kutipan langsung Al-Qur'an atau hadis.
+- Doa yang ditulis sebagai contoh harus tetap diberi konteks sebagai contoh redaksi doa pribadi, bukan doa khusus yang pasti diriwayatkan dari Rasulullah ﷺ atau bacaan wajib.
+- Materi fikih dan referensi memiliki status draf yang perlu ditinjau ahli agama sampai pemilik produk mengubah statusnya setelah peninjauan. Tampilkan pemberitahuan yang sopan pada halaman panduan/referensi. Jangan mengklaim produk telah disahkan, bersertifikat, atau disetujui lembaga agama.
+- Jika file sumber tidak dapat dibaca, jangan mengarang isi 30 malam. Bangun struktur aplikasi dan komponen menggunakan placeholder yang jelas, lalu minta pemilik proyek memasukkan file/konten sumber. Jangan menampilkan placeholder sebagai naskah final.
+Konten 30 malam yang harus tersedia
+PHASE 01 — REALIZE: Menyadari bahwa aku ingin kembali.
+1. The First Step
+2. My Heart Today
+3. When I Feel Distant
+4. Knowing Myself
+5. Remembering Allah
+6. The Blessings I Forgot
+7. Renew My Intention
+PHASE 02 — RETURN: Belajar memulai kembali.
+8. A Door to Return
+9. The Weight I Carry
+10. Sincere Repentance
+11. Learning to Move Forward
+12. Rebuilding My Prayer
+13. Small Deeds Matter
+14. My New Beginning
+
+PHASE 03 — RECONNECT: Membangun kembali kedekatan dengan Allah.
+15. A Quiet Night
+16. Learning Tahajjud
+17. Preparing My Night
+18. My Personal Dua
+19. Speaking from the Heart
+20. Learning to Trust
+21. My Night Reflection
+
+PHASE 04 — REMAIN: Belajar menjaga kedekatan dengan Allah.
+22. A Grateful Heart
+23. Finding Peace in Prayer
+24. When Life Gets Difficult
+25. Letting Go
+26. A Better Version of Me
+27. Consistency Over Perfection
+28. My Daily Connection
+29. Looking Back
+30. Keep Coming Back
+
+Setiap malam memakai struktur konten sesuai naskah:
+- Nomor malam dan judul.
+- Fase dan tema.
+- Opening Reflection.
+- Islamic Insight / Renungan Islam.
+- Referensi ayat atau hadis yang dicantumkan dalam naskah.
+- My Heart Journal / pertanyaan refleksi.
+- My Small Action / aktivitas.
+- My Personal Dua / contoh redaksi doa pribadi.
+- Catatan/pengingat bila tersedia.
+Jika sebuah malam memiliki aktivitas khusus seperti checklist, gunakan bentuk UI yang sesuai tanpa mengubah teks dasarnya.
+Halaman pendukung yang harus disertakan
+1. My Personal Dua Journal — kategori: hubungan dengan Allah; keluarga dan orang-orang tercinta; pekerjaan, rezeki, pendidikan, dan masa depan; ampunan, perbaikan diri, dan akhlak; kebaikan untuk orang lain dan umat.
+2. My Dua Log — tanggal, topik doa, doa yang ingin dipanjatkan, ikhtiar/langkah baik yang menyertai, refleksi/rasa syukur. Tambahkan keterangan bahwa log bukan alat untuk menilai kapan doa akan dikabulkan.
+3. My Tahajud & Night Worship Tracker — 30 baris/tanggal dengan status bangun, jenis ibadah malam, dan catatan singkat. Gunakan tracker untuk mencatat kebiasaan, bukan mengukur iman. “Tidak terbangun” bukan kegagalan moral.
+4. My Night Preparation Checklist — menyelesaikan aktivitas penting; mengurangi layar menjelang tidur; menyiapkan tempat/perlengkapan ibadah; mengatur alarm; memastikan istirahat cukup; meluruskan niat dan berdoa; menyiapkan rencana bila tubuh membutuhkan istirahat.
+5. Gratitude Journal — tanggal, tiga hal yang disyukuri, satu cara menggunakan nikmat untuk kebaikan.
+6. Weekly Muhasabah — refleksi berkala dengan pertanyaan yang bersifat membangun, bukan menghakimi.
+7. Sustainable Spiritual Routine — waktu/momen, kebiasaan yang ingin dijaga, dan cara membuatnya realistis.
+8. My Spiritual Baseline — titik awal tentang hubungan dengan Allah, kebiasaan ibadah, kondisi diri, kebutuhan dukungan, dan niat perjalanan.
+9. Final Reflection — meninjau perjalanan, hal yang dipelajari, kebiasaan yang ingin dipertahankan, dan hal yang masih ingin diperbaiki.
+10. Letter to My Future Self — surat pribadi untuk diri sendiri ketika suatu hari membutuhkan pengingat.
+11. A Gentle Goodbye — penutup sesuai naskah master.
+12. Daftar Rujukan dan Bacaan — daftar sumber sesuai master, tanpa URL atau metadata palsu.
+3. TARGET PENGGUNA DAN SUARA BRAND
+Target pengguna utama adalah Muslim yang ingin kembali memperbaiki hubungan dengan Allah, merasa ibadah belum konsisten, ingin menyediakan waktu untuk refleksi, ingin belajar berdoa dan bermuhasabah, serta ingin memulai kebiasaan ibadah malam secara bertahap.
+
+Brand personality:
+- Hangat, tenang, intim, penuh harapan, elegan, dan tidak menghakimi.
+- Tidak menggurui, tidak menakut-nakuti, tidak mempermalukan, dan tidak memanipulasi rasa bersalah.
+- Menggunakan Bahasa Indonesia yang natural dan lembut.
+- Istilah Inggris hanya dipertahankan untuk nama brand, fase, dan judul malam yang sudah menjadi bagian identitas produk.
+- Sapaan utama: “kamu” secara wajar. Hindari bahasa gaul berlebihan.
+Pesan utama brand:
+“Kamu tidak harus menjadi sempurna untuk mulai memperbaiki diri. Mulailah dengan niat yang baik, ilmu yang benar, dan langkah yang mampu kamu usahakan.”
+
+Prinsip produk:
+- No Judgment: tidak mempermalukan pengguna karena kekurangan ibadah.
+- No False Promise: tidak menjanjikan tahajud 30 malam otomatis mengabulkan keinginan, memperkaya, menyembuhkan, menikahkan, atau mengubah hidup.
+- Gentle Progress: tidak memaksa pengguna menyelesaikan journal secara berurutan atau tanpa jeda.
+- Authentic Islamic Foundation: materi agama berasal dari naskah sumber dan memerlukan pemeriksaan ahli.
+- Privacy First: catatan doa dan refleksi adalah data sangat pribadi. Jangan membagikan, mempublikasikan, menganalisis, atau mengirimkannya ke layanan AI.
+4. ARAH VISUAL DAN DESIGN SYSTEM
+Buat antarmuka premium, minimal, editorial, hangat, dan kontemporer. Hindari kesan template Islami generik, aplikasi administrasi, dashboard SaaS yang kaku, atau dekorasi yang ramai.
+Palet brand
+Gunakan token warna yang konsisten:
+- Midnight Navy: #17253B — warna utama, heading gelap, sidebar, hero.
+- Warm Ivory: #F3EDE1 — latar hangat dan permukaan utama.
+- Muted Gold: #B99B69 — aksen halus, garis, ikon kecil, highlight.
+- Soft Sage: #A5A99A — aksen sekunder untuk status tenang.
+- White / Paper: #FFFDF8 — permukaan kartu dan area tulis.
+- Ink: #28313C — teks isi.
+- Muted Text: #777B80 — informasi sekunder.
+- Border: beige/grey sangat lembut.
+Jangan menggunakan emas metalik berlebihan, neon, gradien mencolok, bayangan tebal, atau latar hitam pekat di seluruh halaman.
+Tipografi
+- Judul/editorial: Cormorant Garamond atau Playfair Display.
+- Body/UI: DM Sans atau Inter.
+- Pastikan ukuran body terbaca di layar ponsel; line-height nyaman, sekitar 1.55–1.75.
+- Gunakan hierarki yang jelas: judul fase, judul malam, subjudul, isi renungan, pertanyaan, label form.
+- Jangan menggunakan all caps pada paragraf panjang.
+Elemen visual
+- Gunakan motif bulan sabit, garis geometris Islam yang sangat halus, bentuk arch, cahaya fajar, atau tekstur kertas sebagai aksen kecil.
+- Hindari ilustrasi figur manusia yang tidak diperlukan.
+- Jangan menciptakan kaligrafi Arab, teks ayat Arab, atau logo palsu. Jika tidak ada aset kaligrafi yang sudah diverifikasi, jangan tampilkan.
+- Gunakan ikon garis sederhana dan konsisten (Lucide atau set ikon yang tersedia).
+- Hindari stok foto di setiap halaman; utamakan layout editorial dan ruang kosong. Gunakan visual hero hanya pada landing page, dashboard, atau halaman pembuka fase bila benar-benar menambah nilai.
+Prinsip layout
+- Mobile-first, tetapi desktop tetap terasa premium.
+- Gunakan ruang kosong yang cukup, margin lega, kartu dengan radius halus, garis pembatas tipis, dan tombol yang jelas.
+- Jangan membuat setiap halaman terlihat padat.
+- Pertanyaan journaling dan area input harus menjadi fokus.
+- Pada tampilan ponsel, semua input dan tombol harus mudah disentuh.
+5. TEKNOLOGI DAN ARSITEKTUR
+Bangun sebagai web app full-stack menggunakan kemampuan Google AI Studio Build Mode.
+
+Stack pilihan:
+- React + TypeScript untuk frontend.
+- Node.js server runtime bila diperlukan oleh template Build Mode.
+- Firebase Authentication untuk login.
+- Cloud Firestore untuk penyimpanan data pengguna.
+- CSS/Tailwind atau sistem styling yang tersedia, tetapi implementasikan design tokens secara konsisten.
+- React Router atau routing setara untuk navigasi.
+- Gunakan library PDF/export yang stabil hanya bila benar-benar diperlukan.
+Minta integrasi Firebase secara eksplisit. Ketika Google AI Studio menampilkan kartu/setup Firebase, tunggu pengguna memilih proyek dan mengaktifkan Firebase. Jangan berpura-pura bahwa login/database sudah aktif sebelum integrasi disetujui dan selesai.
+
+Lokasi Firebase/Firestore/Cloud Run harus dipilih dengan hati-hati. Prioritaskan region yang dekat dengan pengguna Indonesia, misalnya Jakarta jika tersedia, atau region Asia Tenggara terdekat yang didukung. Tampilkan pilihan region sebelum pengaktifan. Ingatkan pemilik proyek bahwa lokasi resource awal dapat mengikat layanan Firebase dan Cloud Run berikutnya dan tidak mudah diganti.
+Authentication
+Sediakan:
+- Daftar menggunakan email dan password.
+- Masuk menggunakan email dan password.
+- Google Sign-In bila tersedia dan diaktifkan.
+- Lupa password/reset email.
+- Logout.
+- Route protection: halaman journal dan semua catatan hanya dapat dibuka setelah autentikasi.
+- Loading/error state yang jelas untuk seluruh proses login.
+- Validasi email, password, dan pesan kesalahan yang ramah.
+Jangan membuat form login palsu atau menyimpan password sendiri. Gunakan Firebase Authentication.
+Mode akses awal
+Untuk MVP beta, gunakan akun yang sudah login dan izinkan pengguna uji mengakses journal. Jangan membuat payment gateway atau checkout pada tahap ini. Siapkan struktur entitlement/access status agar pembatasan akses berbayar dapat ditambahkan kemudian, tetapi jangan mengimplementasikan mekanisme kode akses bersama yang tidak aman. Jangan mengklaim bahwa pembayaran atau proteksi lisensi sudah tersedia.
+Struktur data Firestore yang disarankan
+Gunakan semua data privat dalam subtree masing-masing pengguna:
+
+users/{uid} — profil dan pengaturan pengguna.
+
+Subkoleksi:
+- nightEntries/{nightId} — jawaban dan status sesi masing-masing malam.
+- duaEntries/{entryId} — doa pribadi.
+- duaLogs/{entryId} — catatan doa, topik, ikhtiar, refleksi/rasa syukur.
+- tahajudLogs/{dateId} — catatan aktivitas ibadah malam per tanggal.
+- gratitudeEntries/{entryId} — catatan rasa syukur.
+- weeklyMuhasabah/{entryId} — refleksi mingguan.
+- routineItems/{itemId} — rutinitas spiritual yang ingin dijaga.
+- finalReflections/{entryId} — refleksi akhir dan surat untuk diri di masa depan.
+- bookmarks/{itemId} jika fitur bookmark benar-benar dibuat.
+Dokumen profil dapat menyimpan: displayName, email, createdAt, updatedAt, timezone (default Asia/Jakarta), journeyStartDate, onboardingComplete, contentVersion, dan preferensi UI yang tidak sensitif.
+
+Setiap dokumen pengguna memiliki createdAt dan updatedAt timestamp server jika memungkinkan. Setiap entry memiliki identitas stabil dan tidak boleh tertukar antar pengguna.
+Firebase Security Rules
+Keamanan adalah syarat utama, bukan pekerjaan opsional.
+- Terapkan prinsip default-deny.
+- Pengguna hanya boleh membaca/menulis/mengubah/menghapus dokumen dalam /users/{uid} jika request.auth != null dan request.auth.uid == uid.
+- Tidak ada akses publik ke catatan journal.
+- Jangan memberi akses lintas akun.
+- Validasi tipe data, field yang diizinkan, dan ukuran input bila memungkinkan.
+- Pengguna tidak boleh mengubah role admin, status entitlement, atau hak akses melalui client.
+- Jangan menyimpan credential/service account/admin key di frontend.
+- Jangan menggunakan Firestore rules yang mengizinkan allow read, write: if true.
+- Buat file firestore.rules dan jelaskan aturan pentingnya.
+- Uji dengan dua akun berbeda: akun A tidak boleh bisa membaca atau mengubah data akun B.
+- Sebelum deploy, tampilkan hasil pemeriksaan rules dan tandai masalah yang belum diselesaikan.
+Privasi data
+- Jangan mengirim isi doa, jawaban refleksi, catatan rasa syukur, atau log ibadah ke Gemini/AI API.
+- Jangan membuat AI spiritual companion, AI tafsir mimpi, AI penilai iman, AI pemberi fatwa, atau AI pemberi interpretasi doa.
+- Jangan log isi catatan pengguna ke console, server log, analytics, crash report, atau telemetri.
+- Jangan membuat catatan pengguna bisa dilihat oleh pengguna lain, komunitas, atau admin melalui dashboard biasa.
+- Jangan menambahkan tracking iklan atau analytics yang mengumpulkan konten pribadi.
+- Berikan akses kepada pengguna untuk mengunduh data mereka dan meminta penghapusan akun/data.
+- Jika penghapusan menyeluruh memerlukan fungsi server/admin yang belum dapat dibangun, jangan memberi kesan bahwa data telah terhapus. Tampilkan proses dan status secara jujur.
+- Tampilkan privacy note yang mudah ditemukan dan jelaskan bahwa pengguna sebaiknya tidak menuliskan detail sangat sensitif yang tidak ingin disimpan secara digital.
+6. STRUKTUR NAVIGASI DAN HALAMAN
+Buat navigasi intuitif. Desktop menggunakan sidebar kiri atau navigasi editorial yang ringkas. Mobile menggunakan bottom navigation maksimal lima item.
+
+Navigasi utama:
+1. Beranda
+2. Perjalanan 30 Malam
+3. Catatan
+4. Tracker
+5. Profil
+Submenu di bawah Catatan:
+- Doa Pribadi
+- My Dua Log
+- Gratitude Journal
+- Weekly Muhasabah
+- Rutinitas Spiritual
+- Refleksi Akhir
+PAGE 1 — Landing / Welcome page
+Tujuan: memperkenalkan brand dan membuat pengguna merasa aman memulai.
+Elemen:
+- Logo wordmark RUANG PULANG (jika belum ada aset logo, gunakan wordmark teks yang elegan).
+- Headline: “30 Malam untuk Kembali Mendekat kepada Allah.”
+- Subheadline: “Ruang pribadi untuk refleksi, doa, muhasabah, dan membangun kebiasaan ibadah dengan lebih sadar.”
+- Penjelasan singkat empat fase.
+- Ringkasan fitur: 30 malam guided journal, panduan dasar tahajud, journal doa, gratitude, tracker, refleksi akhir.
+- CTA “Mulai Perjalanan” dan “Masuk”.
+- Pesan brand: tidak perlu sempurna untuk mulai memperbaiki diri.
+- Disclaimer singkat: journal adalah alat bantu refleksi, bukan fatwa dan tidak menjanjikan terkabulnya doa.
+Jangan membuat klaim medis, terapi, hasil spiritual pasti, atau janji perubahan hidup dalam 30 hari.
+PAGE 2 — Onboarding
+Setelah daftar/masuk pertama kali:
+- Sambut pengguna dengan hangat.
+- Minta nama panggilan (opsional).
+- Tanyakan tanggal mulai perjalanan (default hari ini, bisa diedit).
+- Jelaskan bahwa sesi boleh dijalankan fleksibel dan dapat dilewati.
+- Minta persetujuan membaca catatan privasi dan disclaimer.
+- Jangan menanyakan gender, agama, lokasi rinci, masalah kesehatan, atau detail pribadi yang tidak diperlukan.
+- Simpan preferensi onboarding ke Firestore.
+PAGE 3 — Dashboard / Beranda
+Tampilkan:
+- Sapaan personal sederhana.
+- Kalimat pengingat brand yang berubah dari daftar kutipan editorial yang berasal dari naskah, bukan kutipan agama baru.
+- Tombol “Lanjutkan Perjalanan” mengarah ke sesi terakhir yang dibuka atau belum selesai.
+- Empat kartu fase dengan status berdasarkan sesi journal, bukan kualitas ibadah.
+- Ringkasan “Sesi journal tersimpan: X dari 30”.
+- Shortcut ke Doa Pribadi, Gratitude Journal, dan Tracker.
+- Aktivitas terakhir yang aman ditampilkan hanya kepada pemilik akun.
+- Empty state jika belum memulai.
+Jangan menampilkan skor iman, persentase kedekatan dengan Allah, ranking spiritual, streak yang menghukum, atau badge “lebih saleh”.
+PAGE 4 — Journey Map / Perjalanan 30 Malam
+- Tampilkan empat fase sebagai perjalanan visual yang jelas.
+- Setiap fase memiliki judul, deskripsi, nomor malam, tema, dan status.
+- Tampilkan 30 malam sebagai daftar/card/grid yang tetap nyaman di layar ponsel.
+- Semua malam boleh dibuka kapan pun; tidak ada penguncian wajib berdasarkan tanggal.
+- Status malam: “Belum dimulai”, “Ada draf”, “Sesi journal selesai”.
+- Status tersebut menggambarkan pengisian journal, bukan pelaksanaan ibadah atau kualitas iman.
+- Tampilkan tombol untuk membuka setiap malam.
+- Izinkan pengguna melanjutkan dari malam mana pun tanpa harus mengulang malam sebelumnya.
+PAGE 5 — Night Detail / Guided Journal Session
+Ini adalah halaman inti.
+Tampilkan secara berurutan:
+1. Fase, nomor malam, dan judul.
+2. Opening Reflection dalam tipografi nyaman.
+3. Islamic Insight / Renungan Islam dalam panel editorial.
+4. Referensi sumber dengan label yang tepat. Jika URL sumber valid tersedia pada file, tampilkan tautan. Jika tidak, tampilkan teks rujukan saja.
+5. My Heart Journal — setiap pertanyaan memiliki textarea terpisah agar jawaban terstruktur.
+6. My Small Action — checklist atau isian tindakan sesuai isi naskah.
+7. My Personal Dua — textarea privat.
+8. Catatan pribadi opsional.
+9. Tombol “Simpan” dan indikator autosave.
+10. Tombol “Tandai sesi journal selesai” yang terpisah dari status tracker ibadah.
+11. Navigasi malam sebelumnya/berikutnya.
+Perilaku editor:
+- Autosave dengan debounce yang wajar, misalnya 700–1000 ms setelah pengguna berhenti mengetik.
+- Sediakan tombol simpan manual.
+- Status jelas: “Menyimpan…”, “Tersimpan”, “Belum tersimpan”, atau pesan gagal.
+- Jangan menghapus jawaban ketika pengguna berpindah malam.
+- Saat offline atau gagal menyimpan, tampilkan peringatan dan pertahankan draft lokal sementara dengan mekanisme yang aman.
+- Jangan menandai sesi selesai secara otomatis hanya karena halaman dibuka.
+- Pengguna dapat mengedit jawaban lama kapan saja.
+- Jangan mengirim isi jawaban ke AI atau layanan pihak ketiga.
+PAGE 6 — Personal Dua Journal
+Fitur:
+- Membuat, mengedit, menghapus, dan mencari catatan doa.
+- Kategori tetap dari master: hubungan dengan Allah; keluarga/orang tercinta; pekerjaan/rezeki/pendidikan/masa depan; ampunan/perbaikan diri/akhlak; kebaikan untuk orang lain dan umat.
+- Pengguna boleh membuat judul sendiri.
+- Field: judul/topik, kategori, isi doa, tanggal dibuat, catatan ikhtiar opsional, refleksi/syukur opsional.
+- Filter kategori dan pencarian judul.
+- Hanya pemilik akun yang dapat melihat data.
+- Jangan membuat indikator doa “dikabulkan/tidak dikabulkan” atau hitung mundur jawaban doa.
+- Gunakan bahasa yang tidak menjanjikan waktu atau bentuk pengabulan doa.
+PAGE 7 — My Dua Log
+- Daftar catatan doa berurutan berdasarkan tanggal.
+- Field: tanggal, topik doa, doa yang dipanjatkan, ikhtiar/langkah baik yang menyertai, refleksi/rasa syukur.
+- Bisa menambah dan mengedit entry.
+- Ada keterangan: “Catatan ini membantu mengingat doa dan ikhtiar, bukan alat untuk menilai kapan doa akan dikabulkan.”
+- Jangan membangun statistik yang menilai doa berhasil/gagal.
+PAGE 8 — Tahajud & Night Worship Tracker
+Tracker ini berfungsi untuk pencatatan kebiasaan secara netral.
+- Tampilkan 30 baris atau kalender 30 malam yang bisa dihubungkan dengan tanggal perjalanan.
+- Field tanggal/tanggal malam.
+- Status bangun: “Terbangun”, “Tidak terbangun”, “Belum dicatat” (tambahkan “Tidak ingin mencatat” jika mudah dan lebih menjaga privasi).
+- Aktivitas yang dapat dicentang bila dilakukan: tahajud, membaca Al-Qur'an, zikir, doa, istigfar, ibadah malam lainnya.
+- Catatan singkat opsional.
+- Pengguna boleh mengubah atau mengosongkan catatan.
+- Tampilkan pesan: “Tracker ini mencatat kebiasaan, bukan mengukur iman. Tidak terbangun bukan kegagalan moral.”
+- Jangan gunakan red/green moral coding, skor, penalti, streak memalukan, atau pesan bersalah.
+- Jika membuat ringkasan, gunakan istilah netral seperti “malam tercatat” dan “aktivitas yang dicatat”. Jangan tulis “tingkat kesalehan” atau “kedekatan dengan Allah”.
+- Jangan mengasumsikan pengguna menjalankan tahajud setiap malam.
+PAGE 9 — Night Preparation Checklist
+Checklist dapat digunakan berulang kali:
+- Menyelesaikan aktivitas penting sebelum waktu tidur.
+- Mengurangi penggunaan ponsel/layar menjelang tidur.
+- Menyiapkan tempat dan perlengkapan ibadah.
+- Mengatur alarm sesuai waktu yang memungkinkan.
+- Memastikan waktu istirahat tetap cukup.
+- Meluruskan niat dan berdoa sebelum tidur.
+- Menyiapkan rencana cadangan jika tubuh membutuhkan istirahat.
+Tambahkan catatan pribadi. Jangan memberi jaminan bahwa checklist pasti membuat seseorang bangun.
+PAGE 10 — Gratitude Journal
+- Membuat catatan per tanggal.
+- Tiga input: “Hal yang kusyukuri 1, 2, 3”.
+- Satu input: “Cara menggunakan nikmat tersebut untuk kebaikan”.
+- Bisa membuat banyak entry, mengedit, menghapus, mencari, dan melihat riwayat.
+- Beri empty state yang hangat.
+PAGE 11 — Weekly Muhasabah
+Gunakan isi dan pertanyaan dari naskah master. Jika naskah hanya memberi struktur ringkas, jangan menciptakan klaim agama baru. Sediakan ruang refleksi:
+- Hal baik yang disyukuri minggu ini.
+- Ibadah/kebiasaan yang ingin dijaga.
+- Hal yang perlu diperbaiki.
+- Ikhtiar realistis untuk minggu berikutnya.
+- Doa pribadi.
+PAGE 12 — Sustainable Spiritual Routine
+- Pengguna dapat menambah rutinitas sendiri.
+- Field: waktu/momen, nama kebiasaan, alasan/manfaat pribadi, cara membuatnya realistis, frekuensi pilihan.
+- Contoh rutinitas dari naskah: setelah Subuh, siang, sore, sebelum tidur, malam.
+- Izinkan edit, hapus, dan susun urutan.
+- Jangan memaksa jadwal ibadah dengan jam otomatis yang tidak diminta.
+PAGE 13 — Final Reflection & Letter to My Future Self
+- Tampilkan refleksi awal (My Spiritual Baseline) bila tersedia dan refleksi akhir berdampingan secara privat.
+- Jangan memberi nilai atau kesimpulan otomatis tentang kualitas keimanan.
+- Tampilkan pertanyaan final sesuai naskah.
+- Surat untuk diri sendiri dapat disimpan dan diedit.
+- Sediakan tombol print/export.
+PAGE 14 — References / Panduan
+- Tampilkan daftar rujukan dari naskah master.
+- Kelompokkan ayat Al-Qur'an, hadis, dan bacaan pengantar fikih.
+- Jangan menambahkan referensi baru secara otomatis.
+- Jangan mengarang tautan.
+- Tampilkan status “Materi dalam peninjauan” sampai pemilik proyek menandai telah ditinjau.
+- Untuk panduan tahajud, berikan label “panduan pengantar, bukan pengganti pembelajaran fikih”.
+PAGE 15 — Profile, Privacy, and Settings
+- Nama tampilan.
+- Email akun (read-only dari Firebase Auth bila sesuai).
+- Tanggal mulai perjalanan.
+- Preferensi tema terang (default) dan ukuran teks jika mudah diterapkan.
+- Ekspor data pribadi.
+- Keluar akun.
+- Hapus akun dan data dengan dialog konfirmasi kuat dan proses server-side yang benar.
+- Halaman privasi dan disclaimer.
+- Jangan mengumpulkan data yang tidak dibutuhkan.
+7. ATURAN PROGRESS DAN GAMIFIKASI
+Gamifikasi harus lembut dan tidak mengubah ibadah menjadi kompetisi.
+
+Yang boleh:
+- Progress pengisian sesi journal: 0–30.
+- Label “Belum dimulai”, “Ada draf”, “Sesi selesai”.
+- Pengingat lembut untuk melanjutkan dari halaman terakhir.
+- Timeline empat fase.
+- Ringkasan jumlah catatan yang disimpan.
+Yang dilarang:
+- Skor iman, skor kesalehan, skor hubungan dengan Allah.
+- Ranking pengguna atau leaderboard.
+- Streak yang membuat pengguna merasa berdosa/gagal ketika terlewat.
+- Klaim “semakin banyak tracker dicentang, semakin dekat kepada Allah”.
+- Hadiah atau badge yang mengukur kualitas ibadah.
+- Pesan yang menyimpulkan keadaan hati atau iman pengguna.
+Progress journal dan log aktivitas ibadah harus disimpan sebagai dua jenis data yang berbeda.
+8. UX DETAIL DAN MICROCOPY
+Gunakan copywriting yang lembut dan ringkas. Contoh microcopy:
+- “Selamat datang kembali.”
+- “Mulai dari tempatmu berada hari ini.”
+- “Jawabanmu tersimpan secara pribadi.”
+- “Kamu bisa melanjutkan kapan saja.”
+- “Tidak perlu mengulang dari awal.”
+- “Tracker ini hanya catatan kebiasaan, bukan penilaian iman.”
+- “Belum ada catatan. Kamu bisa mulai kapan pun siap.”
+- “Perubahan tidak harus dimulai dengan langkah besar.”
+Contoh empty states:
+- Doa: “Belum ada catatan doa. Sediakan ruang untuk menuliskan apa yang ingin kamu panjatkan.”
+- Gratitude: “Belum ada catatan syukur. Mulailah dengan satu nikmat sederhana yang kamu sadari hari ini.”
+- Tracker: “Belum ada aktivitas yang dicatat. Tidak apa-apa; kamu bisa mengisinya ketika siap.”
+Terapkan konfirmasi sebelum menghapus catatan. Setelah hapus, tampilkan pesan yang jelas. Jangan pernah menghapus otomatis catatan pengguna karena mengubah fase atau tanggal perjalanan.
+9. RESPONSIVE DESIGN DAN AKSESIBILITAS
+- Mobile-first untuk lebar 360 px ke atas.
+- Tablet dan desktop harus dioptimalkan, bukan hanya diperlebar.
+- Sidebar desktop berubah menjadi bottom navigation di ponsel.
+- Gunakan target sentuh minimal sekitar 44 px.
+- Label input selalu terlihat; jangan hanya menggunakan placeholder.
+- Kontras warna harus memadai.
+- Form bisa digunakan dengan keyboard.
+- Focus state jelas.
+- Gunakan semantic HTML dan label aksesibel.
+- Jangan mengandalkan warna saja untuk menunjukkan status.
+- Pastikan teks panjang nyaman dibaca; hindari paragraf yang terlalu lebar di desktop.
+- Tangani font fallback bila Google Fonts tidak tersedia.
+10. DATA HANDLING, AUTOSAVE, DAN ERROR STATE
+- Semua catatan penting disimpan di Firestore setelah login.
+- Buat repository/service layer agar UI tidak langsung menulis query Firestore di semua komponen.
+- Gunakan TypeScript types untuk semua model data.
+- Gunakan server timestamps bila sesuai.
+- Autosave harus mencegah race condition dan kehilangan teks terbaru.
+- Jangan menampilkan “Tersimpan” sebelum server/SDK mengonfirmasi write berhasil.
+- Tampilkan status offline/gagal simpan dengan jelas.
+- Sediakan retry tanpa menghapus isi form.
+- Hindari query berulang yang tidak perlu.
+- Gunakan pagination atau limit untuk daftar catatan jika diperlukan.
+- Simpan konten journal sebagai konten statis berversi di source code; simpan hanya jawaban dan preferensi pengguna di Firestore.
+- Setiap entry menyimpan contentVersion agar versi naskah yang dipakai dapat diketahui jika ada pembaruan konten di masa depan.
+11. EKSPOR DAN PENGELOLAAN DATA
+Minimal implementasikan:
+- Export semua data jurnal pribadi dalam JSON yang dapat diunduh.
+- Export/print tampilan journal atau rangkuman pilihan menjadi format print-friendly yang dapat disimpan sebagai PDF melalui browser.
+- Tampilkan tanggal ekspor.
+- Jangan memasukkan data pengguna lain.
+- Beri pengguna pilihan mengekspor semua data atau kategori tertentu jika layak.
+- Hapus akun/data hanya melalui proses yang aman dan terverifikasi. Firestore subcollection harus benar-benar ditangani; menghapus dokumen parent saja tidak cukup.
+- Jika proses penghapusan penuh belum dapat dijalankan dengan aman, jelaskan batasannya dan jangan mengklaim semua data telah terhapus.
+12. ADMIN DAN MONETISASI — BATASAN MVP
+Untuk versi pertama:
+- Fokus pada pengalaman pengguna journal.
+- Jangan membuat checkout, payment gateway, voucher, subscription, atau integrasi pembayaran.
+- Jangan menyimpan informasi kartu atau data finansial.
+- Jangan membuka catatan pribadi pengguna untuk admin.
+- Siapkan kode aplikasi agar sistem entitlement/akses premium dapat ditambahkan nanti secara server-side.
+- Jangan mengimplementasikan role admin yang bisa ditetapkan sendiri oleh client.
+- Jika nanti diperlukan admin panel untuk memberi akses, role harus diverifikasi server-side dan tidak dapat diubah dari browser pengguna.
+13. STRUKTUR KODE YANG DIHARAPKAN
+Jaga kode modular dan mudah dirawat. Contoh struktur (sesuaikan dengan template AI Studio):
+src/
+  app/
+    App.tsx
+    routes.tsx
+  components/
+    layout/
+    navigation/
+    cards/
+    forms/
+    feedback/
+    journal/
+  pages/
+    LandingPage.tsx
+    AuthPage.tsx
+    OnboardingPage.tsx
+    DashboardPage.tsx
+    JourneyPage.tsx
+    NightDetailPage.tsx
+    DuaJournalPage.tsx
+    DuaLogPage.tsx
+    TahajudTrackerPage.tsx
+    PreparationChecklistPage.tsx
+    GratitudePage.tsx
+    WeeklyMuhasabahPage.tsx
+    RoutinePage.tsx
+    FinalReflectionPage.tsx
+    ReferencesPage.tsx
+    SettingsPage.tsx
+  content/
+    journalContent.ts
+    supportingPages.ts
+    references.ts
+  lib/
+    firebase.ts
+    auth.ts
+    firestore.ts
+    export.ts
+  hooks/
+  types/
+  styles/
+server/
+  routes/ (bila dibutuhkan)
+firestore.rules
+README.md
+Jangan memaksakan struktur persis jika template AI Studio memiliki pola yang lebih sesuai. Yang penting tanggung jawab antar file terpisah, komponen dapat digunakan ulang, dan tidak ada satu file raksasa yang memuat seluruh aplikasi.
+14. TESTING DAN ACCEPTANCE CRITERIA
+Sebelum menyatakan aplikasi selesai, uji seluruh alur berikut:
+Authentication
+- Pengguna dapat mendaftar.
+- Pengguna dapat masuk dan keluar.
+- Reset password bekerja atau status implementasinya dijelaskan.
+- Pengguna yang belum login tidak dapat membuka halaman privat.
+Journey
+- Semua 30 malam muncul dalam empat fase dan urutannya benar.
+- Setiap malam membuka konten yang sesuai dengan master.
+- Pengguna dapat membuka malam mana pun.
+- Jawaban dapat disimpan, dimuat kembali, dan diedit setelah refresh.
+- Sesi journal hanya ditandai selesai setelah tindakan eksplisit pengguna.
+- Progress dashboard hanya menghitung status sesi journal.
+Supporting Journals
+- Pengguna dapat membuat, mengedit, mencari, dan menghapus catatan doa.
+- Dua Log dapat menyimpan topik, tanggal, doa, ikhtiar, dan refleksi.
+- Tracker dapat menyimpan status dan aktivitas tanpa skor iman.
+- Gratitude Journal dapat menyimpan tiga hal yang disyukuri dan tindakan kebaikan.
+- Checklist dan routine dapat diedit dan disimpan.
+- Weekly Muhasabah dan final reflection tersimpan.
+Security and privacy
+- Buat dua akun pengujian.
+- Pastikan akun A tidak dapat membaca/mengubah data akun B.
+- Pastikan semua Firestore rules default-deny.
+- Pastikan tidak ada catatan pribadi di console/server logs/analytics.
+- Pastikan tidak ada request ke Gemini API untuk membaca journal pribadi.
+Responsive and accessibility
+- Uji lebar 360 px, 390 px, tablet, dan desktop.
+- Periksa tidak ada horizontal overflow.
+- Periksa tombol, form, textarea, dialog, bottom navigation, dan sidebar.
+- Periksa kontras, label, keyboard focus, dan pesan error.
+Reliability
+- Refresh halaman tidak menghilangkan data.
+- Network error tidak menghapus draft.
+- Loading dan empty states tampil benar.
+- Tombol tidak ada yang inert.
+- Tidak ada lorem ipsum atau konten demo yang tertinggal pada versi final.
+- Tidak ada data pribadi contoh yang terlihat oleh akun baru.
+15. OUTPUT YANG HARUS DIHASILKAN
+Buat aplikasi, bukan hanya penjelasan. Setelah membangun:
+1. Tampilkan live preview.
+2. Ringkas halaman dan fitur yang benar-benar sudah bekerja.
+3. Sebutkan file utama yang dibuat.
+4. Sebutkan bagian yang memerlukan tindakan manual dari pemilik proyek (misalnya Enable Firebase, mengaktifkan provider login, peninjauan Firestore rules, pengaturan domain).
+5. Tampilkan status yang belum selesai secara jujur.
+6. Jangan menyebut aplikasi siap produksi sebelum security rules, persistence, dan pengujian lintas akun berhasil.
+7. Jangan deploy otomatis tanpa persetujuan pemilik proyek.
+Mulai dengan membangun fondasi aplikasi yang berfungsi dan desain visual yang kuat. Jika konteks sumber konten tersedia, integrasikan seluruh konten master. Jika belum, jangan mengarang konten; buat scaffold dan minta sumber konten sebelum mengisi teks final.

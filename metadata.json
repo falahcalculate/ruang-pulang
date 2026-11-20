@@ -1,0 +1,6 @@
+{
+  "name": "RUANG PULANG — The Comeback Journal",
+  "description": "30 Malam untuk Kembali Mendekat kepada Allah. Ruang pribadi untuk refleksi, doa, muhasabah, dan membangun kebiasaan ibadah dengan lebih sadar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,644 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private profile and preferences for a Ruang Pulang user.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 254
+        },
+        "timezone": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "journeyStartDate": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "onboardingComplete": {
+          "type": "boolean"
+        },
+        "privacyAccepted": {
+          "type": "boolean"
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "fontSizePreference": {
+          "type": "string",
+          "enum": ["normal", "large"]
+        },
+        "lastOpenedNight": {
+          "type": "integer"
+        },
+        "entitlementStatus": {
+          "type": "string",
+          "enum": ["beta_free"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "timezone",
+        "journeyStartDate",
+        "onboardingComplete",
+        "privacyAccepted",
+        "contentVersion",
+        "entitlementStatus",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "NightEntry": {
+      "title": "NightEntry",
+      "description": "User reflection responses and session status for one of the 30 nights.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "nightNumber": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["not_started", "draft", "completed"]
+        },
+        "reflectionAnswers": {
+          "type": "array"
+        },
+        "smallActionNotes": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "smallActionChecks": {
+          "type": "array"
+        },
+        "personalDua": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "privateNote": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "nightNumber",
+        "status",
+        "reflectionAnswers",
+        "smallActionNotes",
+        "smallActionChecks",
+        "personalDua",
+        "privateNote",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "DuaEntry": {
+      "title": "DuaEntry",
+      "description": "Personal dua entry organized by master category.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "hubungan-dengan-allah",
+            "keluarga-dan-orang-tercinta",
+            "pekerjaan-rezeki-pendidikan",
+            "ampunan-dan-perbaikan-diri",
+            "kebaikan-untuk-orang-lain"
+          ]
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 6000
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "effortNote": {
+          "type": "string",
+          "maxLength": 3000
+        },
+        "reflectionNote": {
+          "type": "string",
+          "maxLength": 3000
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "title",
+        "category",
+        "content",
+        "date",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "DuaLog": {
+      "title": "DuaLog",
+      "description": "Chronological log of personal dua, effort, and gratitude.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "date": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "duaText": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 6000
+        },
+        "effortSteps": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "reflectionGratitude": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "date",
+        "topic",
+        "duaText",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "TahajudLog": {
+      "title": "TahajudLog",
+      "description": "Neutral night worship habit log per night/date.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "nightIndex": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "wakeStatus": {
+          "type": "string",
+          "enum": ["terbangun", "tidak_terbangun", "belum_dicatat", "tidak_ingin_mencatat"]
+        },
+        "activities": {
+          "type": "array"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "nightIndex",
+        "date",
+        "wakeStatus",
+        "activities",
+        "note",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ChecklistState": {
+      "title": "ChecklistState",
+      "description": "Reusable night preparation checklist state.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "checkedIds": {
+          "type": "array"
+        },
+        "personalNote": {
+          "type": "string",
+          "maxLength": 3000
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "checkedIds",
+        "personalNote",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "GratitudeEntry": {
+      "title": "GratitudeEntry",
+      "description": "Daily gratitude reflection with 3 blessings and 1 good action.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "date": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "item1": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "item2": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "item3": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "goodDeedPlan": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "date",
+        "item1",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "WeeklyMuhasabah": {
+      "title": "WeeklyMuhasabah",
+      "description": "Weekly non-judgmental self-reflection entry.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "weekLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "gratitudeThisWeek": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "habitsToKeep": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "areasToImprove": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "realisticSteps": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "personalDua": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "weekLabel",
+        "date",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "RoutineItem": {
+      "title": "RoutineItem",
+      "description": "Sustainable spiritual routine item created by the user.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "moment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "habitName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "personalBenefit": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "realisticWay": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "frequency": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "sortOrder": {
+          "type": "integer"
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "moment",
+        "habitName",
+        "sortOrder",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "FinalReflection": {
+      "title": "FinalReflection",
+      "description": "Spiritual baseline, final reflection, and letter to future self.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "entryType": {
+          "type": "string",
+          "enum": ["baseline", "final_reflection"]
+        },
+        "relationshipBaseline": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "worshipHabitsBaseline": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "currentCondition": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "supportNeeded": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "journeyIntention": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "learnedLessons": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "habitsToMaintain": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "areasStillGrowing": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "letterToFutureSelf": {
+          "type": "string",
+          "maxLength": 10000
+        },
+        "contentVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "entryType",
+        "contentVersion",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user profile and preferences."
+    },
+    "/users/{userId}/nightEntries/{nightId}": {
+      "schema": { "$ref": "#/entities/NightEntry" },
+      "description": "Guided 30-night reflection entries."
+    },
+    "/users/{userId}/duaEntries/{entryId}": {
+      "schema": { "$ref": "#/entities/DuaEntry" },
+      "description": "Personal dua journal entries."
+    },
+    "/users/{userId}/duaLogs/{entryId}": {
+      "schema": { "$ref": "#/entities/DuaLog" },
+      "description": "Chronological dua logs."
+    },
+    "/users/{userId}/tahajudLogs/{dateId}": {
+      "schema": { "$ref": "#/entities/TahajudLog" },
+      "description": "Neutral night worship habit logs."
+    },
+    "/users/{userId}/checklists/{checklistId}": {
+      "schema": { "$ref": "#/entities/ChecklistState" },
+      "description": "Reusable night preparation checklist state."
+    },
+    "/users/{userId}/gratitudeEntries/{entryId}": {
+      "schema": { "$ref": "#/entities/GratitudeEntry" },
+      "description": "Gratitude journal entries."
+    },
+    "/users/{userId}/weeklyMuhasabah/{entryId}": {
+      "schema": { "$ref": "#/entities/WeeklyMuhasabah" },
+      "description": "Weekly muhasabah entries."
+    },
+    "/users/{userId}/routineItems/{itemId}": {
+      "schema": { "$ref": "#/entities/RoutineItem" },
+      "description": "Sustainable spiritual routine items."
+    },
+    "/users/{userId}/finalReflections/{entryId}": {
+      "schema": { "$ref": "#/entities/FinalReflection" },
+      "description": "Spiritual baseline, final reflection, and letter to future self."
+    }
+  }
+}
